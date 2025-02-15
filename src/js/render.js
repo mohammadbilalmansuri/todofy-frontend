@@ -123,7 +123,7 @@ export const renderTodos = (todos) => {
                 )}...<button class="read-more">Read More</button>`
               : todo.description
           }</p>`
-        : null
+        : ""
     }
   </div>
   <div class="min-w-fit flex items-center gap-2">
@@ -134,7 +134,7 @@ export const renderTodos = (todos) => {
         }">
           ${parsedDueTime}
       </p>`
-      : null
+      : ""
   }
   <button class="status icon ${todo.status ? "checked" : "unchecked"}">
     ${
