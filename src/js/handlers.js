@@ -7,7 +7,12 @@ import {
 } from "./state.js";
 import { AuthService, TodoService } from "./apiService.js";
 import Validation from "./validation.js";
-import { renderMessagePopup, renderTodos } from "./render.js";
+import {
+  renderMessagePopup,
+  renderTodos,
+  renderUserConfirmation,
+} from "./render.js";
+import { togglePasswordVisibility } from "./utils.js";
 
 export const handleLogin = async (e) => {
   e.preventDefault();
@@ -229,13 +234,13 @@ export const handleAddEditTodo = (todo) => {
   <h2 class="main-heading">${todo ? "Edit Task" : "Add New Task"}</h2>
   <div class="w-full relative flex flex-col gap-1 items-start">
     <label for="todoTitle" class="label">Title <span class="text-orange">*</span></label>
-    <input id="todoTitle" name="todoTitle" type="text" placeholder="Enter task title" class="input" value="${
+    <input id="todoTitle" name="todoTitle" type="text" placeholder="Enter title" class="input" value="${
       todo?.title || ""
     }" required />
   </div>
   <div class="w-full relative flex flex-col gap-1 items-start">
     <label for="todoDescription" class="label">Description</label>
-    <textarea id="todoDescription" name="todoDescription" placeholder="Enter task description" class="input h-full min-h-20" rows="2" maxlength="1000">${
+    <textarea id="todoDescription" name="todoDescription" placeholder="Enter description" class="input h-full min-h-20" rows="2" maxlength="1000">${
       todo?.description || ""
     }</textarea>
   </div>
