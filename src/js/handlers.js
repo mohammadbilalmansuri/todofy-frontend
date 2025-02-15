@@ -161,7 +161,7 @@ export const handleDeleteUser = () => {
 
   const removePopup = () => {
     form.removeEventListener("submit", handleSubmit);
-    popupContainer.removeEventListener("click", handlePopupClose);
+    popupContainer.removeEventListener("click", handlePopupClick);
     clearTimeout(popupContainer.timeoutId);
     popupContainer.remove();
   };
@@ -346,17 +346,16 @@ export const handleToggleTodoStatus = async (todoId, status, targetBtn) => {
     const response = await TodoService.toggleTodoStatus(todoId, status);
     if (!response.success) throw new Error(response.message);
     addOrUpdateTodo(response.data);
-    // renderTodos(todos);
     status = response.data.status;
+    renderTodos(todos);
   } catch (error) {
     renderMessagePopup(error.message);
+    targetBtn.innerHTML = status
+      ? `<svg viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>`
+      : `<svg viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>`;
   } finally {
     targetBtn.disabled = false;
   }
-
-  targetBtn.innerHTML = status
-    ? `<svg viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>`
-    : `<svg viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>`;
 };
 
 export const setupTodoEventListeners = () => {

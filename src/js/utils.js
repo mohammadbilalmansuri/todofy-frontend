@@ -19,8 +19,6 @@ export const getTimeLeft = (dueDateTime) => {
   diff = Math.abs(diff);
 
   const timeUnits = [
-    { label: "yr", value: 1000 * 60 * 60 * 24 * 365 },
-    { label: "mo", value: 1000 * 60 * 60 * 24 * 30 },
     { label: "d", value: 1000 * 60 * 60 * 24 },
     { label: "hr", value: 1000 * 60 * 60 },
     { label: "min", value: 1000 * 60 },
@@ -29,7 +27,7 @@ export const getTimeLeft = (dueDateTime) => {
   const timeParts = timeUnits.reduce((acc, unit) => {
     const amount = Math.floor(diff / unit.value);
     diff -= amount * unit.value;
-    if (amount > 0) acc.push(`${amount} ${unit.label}${amount > 1 ? "s" : ""}`);
+    if (amount > 0) acc.push(`${amount}${unit.label}`);
     return acc;
   }, []);
 
