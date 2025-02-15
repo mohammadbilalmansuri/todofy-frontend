@@ -68,7 +68,11 @@
 }
 
 @utility small-btn {
-  @apply md:px-4 px-2.5 md:h-10 h-8 md:text-base text-sm flex items-center justify-center rounded-lg active:scale-95 cursor-pointer;
+  @apply md:px-4 px-2.5 md:h-10 h-8 md:text-base text-sm flex items-center justify-center md:rounded-lg rounded-md active:scale-95 cursor-pointer;
+}
+
+@utility big-btn {
+  @apply md:text-lg text-base active:scale-95 md:px-5 px-3 md:py-2.5 py-2 rounded-lg cursor-pointer;
 }
 
 @layer components {
@@ -77,11 +81,11 @@
   }
 
   .theme-btn {
-    @apply flex items-center justify-center md:size-10 size-8 rounded-lg active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
+    @apply flex items-center justify-center md:size-10 size-8 md:rounded-lg rounded-md active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
   }
 
   .icon {
-    @apply flex items-center justify-center rounded-lg active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 md:size-8 size-7 cursor-pointer;
+    @apply flex items-center justify-center md:rounded-lg rounded-md active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 md:size-8 size-7 cursor-pointer;
 
     svg {
       @apply md:size-4 size-3.5;
@@ -97,15 +101,15 @@
   }
 
   .gray-btn-2 {
-    @apply text-lg active:scale-95 px-5 py-2.5 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer;
+    @apply big-btn bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600;
   }
 
   .orange-btn-2 {
-    @apply text-lg bg-orange text-white hover:bg-orange-hover px-5 py-2.5 rounded-lg active:scale-95 cursor-pointer;
+    @apply big-btn bg-orange text-white hover:bg-orange-hover;
   }
 
   .main-heading {
-    @apply text-[2rem] font-bold text-gray-900 dark:text-gray-100;
+    @apply md:text-[2rem] text-[1.5rem] leading-normal font-bold text-gray-900 dark:text-gray-100;
   }
 
   .secondary-heading {
