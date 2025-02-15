@@ -1,0 +1,138 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-orange: #f97316;
+  --color-orange-hover: #f46036;
+  --color-green: #22c55e;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #eaecef;
+  --color-gray-300: #e2e5e9;
+  --color-gray-400: #dadde2;
+  --color-gray-500: #878c97;
+  --color-gray-600: #323c4c;
+  --color-gray-700: #2d3747;
+  --color-gray-800: #252f3d;
+  --color-gray-900: #1f2937;
+  --breakpoint-xs: 450px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 830px;
+  --breakpoint-lg: 1024px;
+}
+
+@utility autofill-for-light {
+  -webkit-text-fill-color: #1f2937;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@utility autofill-for-dark {
+  -webkit-text-fill-color: #f3f4f6;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@layer base {
+  * {
+    @apply font-inter box-border;
+  }
+
+  body {
+    @apply bg-gray-100 dark:bg-gray-900 text-gray-500 w-full relative flex flex-col items-center;
+  }
+
+  ::selection {
+    @apply bg-orange text-gray-100;
+  }
+
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    @apply absolute right-4 dark:invert invert-0 py-5 pl-36;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    border: 1px solid #878c97;
+    @apply autofill-for-light dark:autofill-for-dark;
+  }
+}
+
+@layer components {
+  .theme-btn {
+    @apply p-3 flex items-center justify-center size-10 rounded-lg active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
+  }
+
+  .icon {
+    @apply flex items-center justify-center rounded-lg active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 size-8 p-2;
+  }
+
+  .main-heading {
+    @apply text-[2rem] font-bold text-gray-900 dark:text-gray-100;
+  }
+
+  .secondary-heading {
+    @apply text-lg font-medium text-gray-900 dark:text-gray-100;
+  }
+
+  .gray-btn-1 {
+    @apply px-4 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg active:scale-95 text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700;
+  }
+
+  .gray-btn-2 {
+    @apply text-lg active:scale-95 px-5 py-2.5 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600;
+  }
+
+  .orange-btn-1 {
+    @apply bg-orange text-gray-100 hover:bg-orange-hover px-4 h-10 flex items-center justify-center rounded-lg active:scale-95;
+  }
+
+  .orange-btn-2 {
+    @apply text-lg bg-orange text-gray-100 hover:bg-orange-hover px-5 py-2.5 rounded-lg active:scale-95;
+  }
+
+  .input {
+    @apply w-full relative border rounded-lg outline-none py-3 px-4 bg-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 focus:border-orange border-gray-500;
+  }
+
+  .label {
+    @apply text-gray-900 dark:text-gray-100 pl-0.5;
+  }
+
+  .eye {
+    @apply absolute right-4 size-4 fill-gray-500 cursor-pointer;
+  }
+
+  .popup-container {
+    @apply fixed top-0 left-0 size-full z-10 bg-gray-500/80 dark:bg-gray-900/80 flex flex-col items-center justify-center;
+  }
+
+  .box {
+    @apply w-full max-w-lg relative bg-gray-200 dark:bg-gray-800 rounded-xl p-12 flex flex-col gap-6 items-center border-x-2 border-orange;
+  }
+
+  .small-popup {
+    @apply absolute z-20 top-5 p-5 rounded-xl flex items-center justify-center gap-5 shadow-lg border-x-2 border-orange bg-gray-200 dark:bg-gray-800;
+  }
+
+  .todo {
+    @apply w-full relative bg-gray-200 dark:bg-gray-800 p-5 rounded-xl flex items-center justify-between gap-5 border-x-2;
+  }
+
+  .read-more {
+    @apply text-orange hover:text-orange-hover text-sm active:scale-95;
+  }
+
+  .due-time {
+    @apply px-2 h-8 text-sm rounded-lg flex items-center justify-center bg-gray-300 dark:bg-gray-700;
+  }
+}
