@@ -20,9 +20,9 @@
   --color-gray-700: #2d3747;
   --color-gray-800: #252f3d;
   --color-gray-900: #1f2937;
-  --breakpoint-xs: 450px;
+  --breakpoint-xs: 460px;
   --breakpoint-sm: 640px;
-  --breakpoint-md: 830px;
+  --breakpoint-md: 840px;
   --breakpoint-lg: 1024px;
 }
 
@@ -46,7 +46,7 @@
   }
 
   ::selection {
-    @apply bg-orange text-gray-100;
+    @apply bg-orange text-white;
   }
 
   input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -67,13 +67,41 @@
   }
 }
 
+@utility small-btn {
+  @apply md:px-4 px-2.5 md:h-10 h-8 md:text-base text-sm flex items-center justify-center rounded-lg active:scale-95 cursor-pointer;
+}
+
 @layer components {
+  .logo {
+    @apply md:text-[2rem] text-[1.5rem] leading-none font-bold text-orange -mt-1;
+  }
+
   .theme-btn {
-    @apply p-3 flex items-center justify-center size-10 rounded-lg active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
+    @apply flex items-center justify-center md:size-10 size-8 rounded-lg active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
   }
 
   .icon {
-    @apply flex items-center justify-center rounded-lg active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 size-8 p-2 cursor-pointer;
+    @apply flex items-center justify-center rounded-lg active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 md:size-8 size-7 cursor-pointer;
+
+    svg {
+      @apply md:size-4 size-3.5;
+    }
+  }
+
+  .gray-btn-1 {
+    @apply small-btn bg-gray-200 hover:bg-gray-300 text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700;
+  }
+
+  .orange-btn-1 {
+    @apply small-btn bg-orange text-white hover:bg-orange-hover;
+  }
+
+  .gray-btn-2 {
+    @apply text-lg active:scale-95 px-5 py-2.5 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer;
+  }
+
+  .orange-btn-2 {
+    @apply text-lg bg-orange text-white hover:bg-orange-hover px-5 py-2.5 rounded-lg active:scale-95 cursor-pointer;
   }
 
   .main-heading {
@@ -82,22 +110,6 @@
 
   .secondary-heading {
     @apply text-lg font-medium text-gray-900 dark:text-gray-100;
-  }
-
-  .gray-btn-1 {
-    @apply px-4 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-lg active:scale-95 text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer;
-  }
-
-  .gray-btn-2 {
-    @apply text-lg active:scale-95 px-5 py-2.5 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer;
-  }
-
-  .orange-btn-1 {
-    @apply bg-orange text-gray-100 hover:bg-orange-hover px-4 h-10 flex items-center justify-center rounded-lg active:scale-95 cursor-pointer;
-  }
-
-  .orange-btn-2 {
-    @apply text-lg bg-orange text-gray-100 hover:bg-orange-hover px-5 py-2.5 rounded-lg active:scale-95 cursor-pointer;
   }
 
   .input {
@@ -121,11 +133,11 @@
   }
 
   .small-popup {
-    @apply absolute z-20 top-5 p-5 rounded-xl flex items-center justify-center gap-5 shadow-lg border-x-2 border-orange bg-gray-200 dark:bg-gray-800;
+    @apply absolute z-20 top-5 p-4 rounded-xl flex items-center justify-center gap-5 shadow-lg border-x-2 border-orange bg-gray-200 dark:bg-gray-800;
   }
 
   .todo {
-    @apply w-full relative bg-gray-200 dark:bg-gray-800 p-5 rounded-xl flex items-center justify-between gap-5 border-x-2;
+    @apply w-full relative bg-gray-200 dark:bg-gray-800 p-4 rounded-xl flex md:flex-row flex-col md:items-center md:justify-between gap-4 border-x-2;
   }
 
   .read-more {
@@ -133,6 +145,6 @@
   }
 
   .due-time {
-    @apply px-2 h-8 text-sm rounded-lg flex items-center justify-center bg-gray-300 dark:bg-gray-700;
+    @apply px-2 md:h-8 h-7 md:text-sm text-xs rounded-lg flex items-center justify-center bg-gray-300 dark:bg-gray-700;
   }
 }
