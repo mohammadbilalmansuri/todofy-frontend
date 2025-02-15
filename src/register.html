@@ -22,22 +22,20 @@
     >
       <header class="w-full relative flex flex-col items-center">
         <div
-          class="w-full max-w-screen-lg relative p-5 flex justify-between items-center"
+          class="w-full max-w-screen-lg relative p-4 flex justify-between items-center"
         >
-          <a href="/" class="text-[2rem] leading-none font-bold text-orange">
-            todofy
-          </a>
+          <a href="/" class="logo">todofy</a>
           <div class="flex items-center gap-3">
             <button class="theme-btn"></button>
-            <a href="/login" class="gray-btn-1 login-btn"> Login </a>
-            <a class="orange-btn-1 register-btn cursor-default"> Register </a>
+            <a href="/login" class="gray-btn-1 login-btn">Login</a>
+            <a class="orange-btn-1 cursor-default">Register</a>
           </div>
         </div>
       </header>
 
       <main class="w-full relative flex flex-col items-center">
         <div
-          class="w-full max-w-screen-lg relative p-5 flex flex-col items-center"
+          class="w-full max-w-screen-lg relative p-4 flex flex-col items-center"
         >
           <form id="register-form" class="box">
             <h1 class="main-heading">Create an account</h1>
@@ -71,7 +69,7 @@
             <button type="submit" class="w-full orange-btn-2">Register</button>
             <p>
               Already have an account?
-              <a href="/login" class="text-orange hover:underline"> Login </a>
+              <a href="/login" class="text-orange hover:underline">Login</a>
             </p>
           </form>
         </div>
@@ -79,9 +77,11 @@
 
       <footer class="w-full relative flex flex-col items-center">
         <div
-          class="w-full max-w-screen-lg relative flex justify-between items-center p-5"
+          class="w-full max-w-screen-lg relative flex sm:flex-row flex-col gap-3 justify-between items-center p-4 sm:text-left text-center"
         >
-          <p>&copy;2024 Todofy | Created by Mohammad Bilal Mansuri</p>
+          <p class="md:text-base text-sm">
+            &copy;2024 Todofy | Created by Mohammad Bilal Mansuri
+          </p>
           <div class="flex items-center gap-3">
             <a href="https://linkedin.com/in/mohammadbilalmansuri" class="icon">
               <svg viewBox="0 0 448 512">
