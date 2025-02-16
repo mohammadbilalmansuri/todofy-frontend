@@ -73,7 +73,7 @@ select:-webkit-autofill:focus {
 }
 
 .btn-lg {
-  @apply h-12 px-4 text-base leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
+  @apply md:h-12 h-10 md:px-4 px-3 md:text-base text-sm leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
 }
 
 .btn-gray {
