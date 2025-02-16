@@ -108,6 +108,10 @@
     @apply big-btn bg-orange text-white hover:bg-orange-hover;
   }
 
+  .submit-btn {
+    @apply md:text-lg text-base active:scale-95 px-5 py-2.5 rounded-lg cursor-pointer bg-orange hover:bg-orange-hover text-white;
+  }
+
   .main-heading {
     @apply md:text-[2rem] text-[1.5rem] leading-normal font-bold text-gray-900 dark:text-gray-100;
   }
@@ -133,7 +137,7 @@
   }
 
   .box {
-    @apply w-full max-w-lg relative bg-gray-200 dark:bg-gray-800 rounded-xl p-12 flex flex-col gap-6 items-center border-x-2 border-orange;
+    @apply w-full max-w-md relative bg-gray-200 dark:bg-gray-800 rounded-xl xs:p-10 p-6 flex flex-col xs:gap-6 gap-5 items-center sm:border-x-2 border-x border-orange text-center;
   }
 
   .small-popup {
