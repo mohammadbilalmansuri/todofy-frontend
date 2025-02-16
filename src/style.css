@@ -20,10 +20,23 @@
   --color-gray-700: #2d3747;
   --color-gray-800: #252f3d;
   --color-gray-900: #1f2937;
-  --breakpoint-xs: 460px;
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 840px;
-  --breakpoint-lg: 1024px;
+  --breakpoint-sm: 512px;
+}
+
+* {
+  @apply font-inter box-border;
+}
+
+body {
+  @apply bg-gray-100 dark:bg-gray-900 text-gray-500 w-full relative flex flex-col items-center;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  @apply absolute right-4 size-4.5 invert-50;
+}
+
+::selection {
+  @apply bg-orange text-white;
 }
 
 @utility autofill-for-light {
@@ -36,123 +49,108 @@
   transition: background-color 5000s ease-in-out 0s;
 }
 
-@layer base {
-  * {
-    @apply font-inter box-border;
-  }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #878c97;
+  @apply autofill-for-light dark:autofill-for-dark;
+}
 
-  body {
-    @apply bg-gray-100 dark:bg-gray-900 text-gray-500 w-full relative flex flex-col items-center;
-  }
+.logo {
+  @apply md:text-[30px] sm:text-[27px] text-[24px] leading-none font-bold text-orange md:-mt-1 -mt-0.5;
+}
 
-  ::selection {
-    @apply bg-orange text-white;
-  }
+/* Button Classes */
 
-  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    @apply absolute right-4 dark:invert invert-0 py-5 pl-36;
-  }
+.btn-sm {
+  @apply md:h-9 h-8 md:px-3 px-2.5 md:text-base text-sm leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
+}
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  textarea:-webkit-autofill,
-  textarea:-webkit-autofill:hover,
-  textarea:-webkit-autofill:focus,
-  select:-webkit-autofill,
-  select:-webkit-autofill:hover,
-  select:-webkit-autofill:focus {
-    border: 1px solid #878c97;
-    @apply autofill-for-light dark:autofill-for-dark;
+.btn-lg {
+  @apply h-12 px-4 text-base leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
+}
+
+.btn-gray {
+  @apply bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600;
+}
+
+.btn-orange {
+  @apply bg-orange text-white hover:bg-orange-hover;
+}
+
+/* Icon Classes */
+
+.icon-sm,
+.icon-lg {
+  @apply flex items-center justify-center rounded-md active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 cursor-pointer;
+
+  svg {
+    @apply sm:size-4 size-3.5;
   }
 }
 
-@utility small-btn {
-  @apply md:px-4 px-2.5 md:h-10 h-8 md:text-base text-sm flex items-center justify-center md:rounded-lg rounded-md active:scale-95 cursor-pointer;
+.icon-lg {
+  @apply md:size-9 size-8;
 }
 
-@utility big-btn {
-  @apply md:text-lg text-base active:scale-95 md:px-5 px-3 md:py-2.5 py-2 rounded-lg cursor-pointer;
+.icon-sm {
+  @apply md:size-8 size-7;
 }
 
-@layer components {
-  .logo {
-    @apply md:text-[2rem] text-[1.5rem] leading-none font-bold text-orange -mt-1;
-  }
+.eye {
+  @apply absolute right-4 size-4 fill-gray-500 cursor-pointer;
+}
 
-  .theme-btn {
-    @apply flex items-center justify-center md:size-10 size-8 md:rounded-lg rounded-md active:scale-95 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 fill-gray-900 dark:fill-gray-100 cursor-pointer;
-  }
+/* Headings Classes */
 
-  .icon {
-    @apply flex items-center justify-center md:rounded-lg rounded-md active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 md:size-8 size-7 cursor-pointer;
+.main-heading {
+  @apply lg:text-[30px] md:text-[27px] sm:text-[25px] text-[22px] leading-normal font-bold text-gray-900 dark:text-gray-100;
+}
 
-    svg {
-      @apply md:size-4 size-3.5;
-    }
-  }
+.secondary-heading {
+  @apply text-lg font-medium text-gray-900 dark:text-gray-100;
+}
 
-  .gray-btn-1 {
-    @apply small-btn bg-gray-200 hover:bg-gray-300 text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700;
-  }
+/* Input Classes */
 
-  .orange-btn-1 {
-    @apply small-btn bg-orange text-white hover:bg-orange-hover;
-  }
+.input {
+  @apply w-full relative border rounded-md outline-none h-12 px-4 bg-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 focus:border-orange border-gray-500;
+}
 
-  .gray-btn-2 {
-    @apply big-btn bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600;
-  }
+.label {
+  @apply text-gray-900 dark:text-gray-100 pl-0.5;
+}
 
-  .orange-btn-2 {
-    @apply big-btn bg-orange text-white hover:bg-orange-hover;
-  }
+/* Container Classes */
 
-  .submit-btn {
-    @apply md:text-lg text-base active:scale-95 px-5 py-2.5 rounded-lg cursor-pointer bg-orange hover:bg-orange-hover text-white;
-  }
+.popup-container {
+  @apply fixed top-0 left-0 size-full z-10 bg-gray-500/80 dark:bg-gray-900/80 flex flex-col items-center justify-center;
+}
 
-  .main-heading {
-    @apply md:text-[2rem] text-[1.5rem] leading-normal font-bold text-gray-900 dark:text-gray-100;
-  }
+.box {
+  @apply w-full max-w-md relative bg-gray-200 dark:bg-gray-800 rounded-md sm:p-10 p-6 flex flex-col sm:gap-6 gap-5 items-center border-x border-orange text-center;
+}
 
-  .secondary-heading {
-    @apply text-lg font-medium text-gray-900 dark:text-gray-100;
-  }
+.small-popup {
+  @apply absolute z-20 top-5 p-4 rounded-md flex items-center justify-center gap-5 shadow-lg border-x border-orange bg-gray-200 dark:bg-gray-800;
+}
 
-  .input {
-    @apply w-full relative border rounded-lg outline-none py-3 px-4 bg-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 focus:border-orange border-gray-500;
-  }
+/* Todo Classes */
 
-  .label {
-    @apply text-gray-900 dark:text-gray-100 pl-0.5;
-  }
+.todo {
+  @apply w-full relative bg-gray-200 dark:bg-gray-800 p-4 rounded-md flex flex-col gap-4 border-x;
+}
 
-  .eye {
-    @apply absolute right-4 size-4 fill-gray-500 cursor-pointer;
-  }
+.read-more {
+  @apply text-orange hover:text-orange-hover text-sm active:scale-95;
+}
 
-  .popup-container {
-    @apply fixed top-0 left-0 size-full z-10 bg-gray-500/80 dark:bg-gray-900/80 flex flex-col items-center justify-center;
-  }
-
-  .box {
-    @apply w-full max-w-md relative bg-gray-200 dark:bg-gray-800 rounded-xl xs:p-10 p-6 flex flex-col xs:gap-6 gap-5 items-center sm:border-x-2 border-x border-orange text-center;
-  }
-
-  .small-popup {
-    @apply absolute z-20 top-5 p-4 rounded-xl flex items-center justify-center gap-5 shadow-lg border-x-2 border-orange bg-gray-200 dark:bg-gray-800;
-  }
-
-  .todo {
-    @apply w-full relative bg-gray-200 dark:bg-gray-800 p-4 rounded-xl flex md:flex-row flex-col md:items-center md:justify-between gap-4 border-x-2;
-  }
-
-  .read-more {
-    @apply text-orange hover:text-orange-hover text-sm active:scale-95;
-  }
-
-  .due-time {
-    @apply px-2 md:h-8 h-7 md:text-sm text-xs rounded-lg flex items-center justify-center bg-gray-300 dark:bg-gray-700;
-  }
+.due-time {
+  @apply px-2 md:h-8 h-7 md:text-sm text-xs rounded-md flex items-center justify-center bg-gray-300 dark:bg-gray-700;
 }
