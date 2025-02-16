@@ -38,18 +38,20 @@
           class="w-full max-w-screen-lg relative p-4 flex flex-col items-center"
         >
           <form id="register-form" class="box">
-            <h1 class="main-heading">Create a new account</h1>
+            <h1 class="main-heading md:pb-2 pb-1">Create a new account</h1>
             <input
               id="name"
               type="text"
               placeholder="Enter your name"
               class="input"
+              required
             />
             <input
               id="email"
               type="text"
               placeholder="Enter your email"
               class="input"
+              required
             />
             <div class="w-full relative flex items-center">
               <input
@@ -57,6 +59,7 @@
                 type="password"
                 placeholder="Enter your password"
                 class="input pr-10"
+                required
               />
               <button type="button" class="eye">
                 <svg viewBox="0 0 576 512">
@@ -66,8 +69,10 @@
                 </svg>
               </button>
             </div>
-            <button type="submit" class="w-full submit-btn">Register</button>
-            <p>
+            <button type="submit" class="w-full btn-lg btn-orange">
+              Register
+            </button>
+            <p class="md:pt-2 pt-1">
               Already have an account?
               <a href="/login" class="text-orange hover:underline">Login</a>
             </p>
