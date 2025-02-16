@@ -3,6 +3,26 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "keywords": [
+    "todofy",
+    "todos",
+    "tasks",
+    "todo",
+    "todo-manager",
+    "task-manager",
+    "task-management",
+    "task",
+    "task-list",
+    "task-organizer",
+    "task-scheduler",
+    "task-planner",
+    "todo-list"
+  ],
+  "description": "Todofy is your ultimate task management app, designed to keep you organized, focused, and motivated. Effortlessly create, update, and track your tasks to achieve your goals every day with ease.",
+  "author": {
+    "name": "Mohammad Bilal Mansuri",
+    "url": "https://www.linkedin.com/in/mohammadbilalmansuri"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
