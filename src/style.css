@@ -21,6 +21,11 @@
   --color-gray-800: #252f3d;
   --color-gray-900: #1f2937;
   --breakpoint-sm: 512px;
+  --text-md: 1.0625rem;
+}
+
+.dark {
+  color-scheme: dark;
 }
 
 * {
@@ -69,15 +74,15 @@ select:-webkit-autofill:focus {
 /* Button Classes */
 
 .btn-sm {
-  @apply md:h-9 h-8 md:px-3 px-2.5 md:text-base text-sm leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
+  @apply md:h-9 h-8 md:px-3 px-2.5 md:text-base text-sm leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer text-center;
 }
 
 .btn-lg {
-  @apply md:h-12 h-11 md:px-4 px-3 leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer;
+  @apply md:h-12 h-11 md:px-4 px-3 leading-none flex items-center justify-center rounded-md active:scale-95 cursor-pointer text-center;
 }
 
 .btn-gray {
-  @apply bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600;
+  @apply bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-400 dark:hover:bg-gray-600;
 }
 
 .btn-orange {
@@ -88,10 +93,10 @@ select:-webkit-autofill:focus {
 
 .icon-sm,
 .icon-lg {
-  @apply flex items-center justify-center rounded-md active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-900 dark:fill-gray-100 cursor-pointer;
+  @apply flex items-center justify-center rounded-md active:scale-95 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 fill-gray-600 dark:fill-gray-400 cursor-pointer;
 
   svg {
-    @apply sm:size-4 size-3.5;
+    @apply md:size-4 size-3.5;
   }
 }
 
@@ -110,47 +115,47 @@ select:-webkit-autofill:focus {
 /* Headings Classes */
 
 .main-heading {
-  @apply lg:text-[30px] md:text-[27px] sm:text-[25px] text-[22px] leading-tight font-bold text-gray-900 dark:text-gray-100;
+  @apply lg:text-[30px] md:text-[27px] sm:text-[25px] text-[22px] leading-tight font-bold text-gray-600 dark:text-gray-400;
 }
 
 .secondary-heading {
-  @apply text-lg font-medium text-gray-900 dark:text-gray-100;
+  @apply md:text-lg text-base leading-normal text-gray-600 dark:text-gray-400;
 }
 
 /* Input Classes */
 
 .input {
-  @apply w-full relative border rounded-md outline-none md:h-12 h-11 md:px-4 px-3 bg-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-500 focus:border-orange border-gray-500;
+  @apply w-full relative border rounded-md outline-none md:h-12 h-11 md:px-4 px-3 bg-transparent text-gray-600 dark:text-gray-400 placeholder:text-gray-500 focus:border-orange border-gray-500;
+}
+
+.textarea {
+  @apply w-full relative border rounded-md outline-none md:p-4 p-3 bg-transparent text-gray-600 dark:text-gray-400 placeholder:text-gray-500 focus:border-orange border-gray-500;
 }
 
 .label {
-  @apply text-gray-900 dark:text-gray-100 pl-0.5;
+  @apply text-gray-600 dark:text-gray-400 pl-0.5;
 }
 
 /* Container Classes */
 
 .popup-container {
-  @apply fixed top-0 left-0 size-full z-10 bg-gray-500/80 dark:bg-gray-900/80 flex flex-col items-center justify-center;
+  @apply fixed top-0 left-0 size-full z-10 bg-gray-500/80 dark:bg-gray-900/80 flex flex-col items-center justify-center p-4;
 }
 
 .box {
-  @apply w-full max-w-md relative bg-gray-200 dark:bg-gray-800 rounded-md md:p-10 sm:p-8 p-6 flex flex-col gap-4 items-center border-x border-orange text-center;
+  @apply w-full relative bg-gray-200 dark:bg-gray-800 rounded-md md:p-10 sm:p-8 p-6 flex flex-col gap-4 items-center border-x border-orange text-center;
 }
 
 .small-popup {
-  @apply absolute z-20 top-5 p-4 rounded-md flex items-center justify-center gap-5 shadow-lg border-x border-orange bg-gray-200 dark:bg-gray-800;
+  @apply absolute z-20 p-4 m-4 rounded-md flex items-center justify-center gap-4 shadow-lg border-x border-orange bg-gray-200 dark:bg-gray-800;
 }
 
 /* Todo Classes */
 
 .todo {
-  @apply w-full relative bg-gray-200 dark:bg-gray-800 p-4 rounded-md flex flex-col gap-4 border-x;
-}
-
-.read-more {
-  @apply text-orange hover:text-orange-hover text-sm active:scale-95;
+  @apply w-full relative bg-gray-200 dark:bg-gray-800 p-4 rounded-md flex flex-col gap-3 border-x break-all;
 }
 
 .due-time {
-  @apply px-2 md:h-8 h-7 md:text-sm text-xs rounded-md flex items-center justify-center bg-gray-300 dark:bg-gray-700;
+  @apply px-2 md:h-8 h-7 md:text-sm text-xs leading-none rounded-md flex items-center justify-center bg-gray-300 dark:bg-gray-700;
 }

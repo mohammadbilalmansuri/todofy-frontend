@@ -25,6 +25,15 @@ export const setTheme = (isDarkMode) => {
   }
 };
 
+export const initializeTheme = () => {
+  const storedDarkMode = localStorage.getItem("darkMode");
+  setTheme(
+    storedDarkMode
+      ? storedDarkMode === "true"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+};
+
 export const setTodos = (todosArray) => {
   todos = new Map(todosArray.map((todo) => [todo._id, todo]));
 };

@@ -4,48 +4,46 @@ import {
   addOrUpdateTodo,
   deleteTodo,
   getTodo,
+  setTodos,
 } from "./state.js";
 import { AuthService, TodoService } from "./apiService.js";
-import Validation from "./validation.js";
+import validate from "./validation.js";
 import {
   renderMessagePopup,
   renderTodos,
   renderUserConfirmation,
 } from "./render.js";
-import { togglePasswordVisibility } from "./utils.js";
+
+export const handlePasswordToggleEye = (eye) => {
+  const passwordInput = eye.previousElementSibling;
+  const isPasswordType = passwordInput.getAttribute("type") === "password";
+  passwordInput.setAttribute("type", isPasswordType ? "text" : "password");
+  eye.innerHTML = isPasswordType
+    ? `<svg viewBox="0 0 640 512"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>`
+    : `<svg viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/></svg>`;
+};
 
 export const handleLogin = async (e) => {
   e.preventDefault();
   const form = e.target;
-  const email = form.email.value;
-  const password = form.password.value;
+  const validatedData = validate(form, ["email", "password"]);
+  if (!validatedData) return;
 
-  if (!Validation.isEmailValid(email)) {
-    form.email.focus();
-    renderMessagePopup("Invalid email");
-    return;
-  }
-
-  if (!Validation.isPasswordValid(password)) {
-    form.password.focus();
-    renderMessagePopup(
-      "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number"
-    );
-    return;
-  }
+  const { email, password } = validatedData;
 
   const submitBtn = form.querySelector("button[type='submit']");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Processing...";
+  submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>`;
 
   try {
     const response = await AuthService.loginUser(email, password);
     if (!response.success) throw new Error(response.message);
+
     setUser(response.data.user);
     form.reset();
-    window.location.href = "/dashboard?message=login_success";
+    window.location.replace("/dashboard?message=login_success");
   } catch (error) {
-    renderMessagePopup(error.message);
+    renderMessagePopup(error.response?.data?.message || error.message);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Login";
@@ -55,33 +53,14 @@ export const handleLogin = async (e) => {
 export const handleRegister = async (e) => {
   e.preventDefault();
   const form = e.target;
-  const name = form.name.value;
-  const email = form.email.value;
-  const password = form.password.value;
+  const validatedData = validate(form, ["name", "email", "password"]);
+  if (!validatedData) return;
 
-  if (!Validation.isNameValid(name)) {
-    form.name.focus();
-    renderMessagePopup("Name must be at least 3 characters long");
-    return;
-  }
+  const { name, email, password } = validatedData;
 
-  if (!Validation.isEmailValid(email)) {
-    form.email.focus();
-    renderMessagePopup("Invalid email");
-    return;
-  }
-
-  if (!Validation.isPasswordValid(password)) {
-    form.password.focus();
-    renderMessagePopup(
-      "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number"
-    );
-    return;
-  }
-
-  const registerSubmitBtn = form.querySelector("button[type='submit']");
-  registerSubmitBtn.disabled = true;
-  registerSubmitBtn.textContent = "Processing...";
+  const submitBtn = form.querySelector("button[type='submit']");
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>`;
 
   try {
     const registerResponse = await AuthService.registerUser(
@@ -90,16 +69,18 @@ export const handleRegister = async (e) => {
       password
     );
     if (!registerResponse.success) throw new Error(registerResponse.message);
+
     const loginResponse = await AuthService.loginUser(email, password);
     if (!loginResponse.success) throw new Error(loginResponse.message);
+
     setUser(loginResponse.data.user);
     form.reset();
-    window.location.href = "/dashboard?message=account_success";
+    window.location.replace("/dashboard?message=account_success");
   } catch (error) {
-    renderMessagePopup(error.message);
+    renderMessagePopup(error.response?.data?.message || error.message);
   } finally {
-    registerSubmitBtn.disabled = false;
-    registerSubmitBtn.textContent = "Register";
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Register";
   }
 };
 
@@ -108,228 +89,190 @@ export const handleLogout = async () => {
     const logoutResponse = await AuthService.logoutUser();
     if (!logoutResponse.success) throw new Error(logoutResponse.message);
     setUser(null);
-    window.location.href = "/login?message=logged_out";
+    window.location.replace("/login?message=logged_out");
   } catch (error) {
-    renderMessagePopup(error.message);
-  }
-};
-
-export const handleDeleteTodo = async (todoId) => {
-  try {
-    const deleteTodoResponse = await TodoService.deleteTodo(todoId);
-    if (!deleteTodoResponse.success)
-      throw new Error(deleteTodoResponse.message);
-
-    deleteTodo(todoId);
-    renderTodos(todos);
-  } catch (error) {
-    renderMessagePopup(error.message);
+    renderMessagePopup(error.response?.data?.message || error.message);
   }
 };
 
 export const handleDeleteUser = () => {
+  let existingPopup = document.querySelector(".popup-container");
+  if (existingPopup) {
+    clearTimeout(existingPopup.timeoutId);
+    existingPopup.querySelector("form").remove();
+    existingPopup.remove();
+  }
+
   const popupContainer = document.createElement("div");
-  popupContainer.className = "popup-container";
+  popupContainer.classList.add("popup-container");
 
   const form = document.createElement("form");
-  form.id = "delete-account-form";
-  form.classList.add("box");
+  form.classList.add("box", "max-w-md");
 
   form.innerHTML = `
-  <h2 class="main-heading">Delete Account</h2>
-  <div class="w-full relative flex items-center">
-    <input
-      name="password"
-      type="password"
-      placeholder="Confirm your password"
-      class="input pr-10"
-      required
-    />
-    <button type="button" class="eye">
-      <svg viewBox="0 0 576 512">
-        <path
-          d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
-        />
-      </svg>
-    </button>
-  </div>
-  <div class="w-full flex gap-4">
-    <button type="submit" class="w-full orange-btn-2 submit">Delete</button>
-    <button type="button" class="w-full cancel gray-btn-2">Cancel</button>
-  </div>
-`;
+    <h2 class="main-heading md:pb-2 pb-1">Delete Account</h2>
+    
+    <div class="w-full relative flex items-center">
+      <input
+        name="password"
+        type="password"
+        placeholder="Confirm your password"
+        class="input pr-10"
+        required
+      />
+      <button type="button" class="eye">
+        <svg viewBox="0 0 576 512">
+          <path
+            d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
+          />
+        </svg>
+      </button>
+    </div>
 
-  const removePopup = () => {
-    form.removeEventListener("submit", handleSubmit);
-    popupContainer.removeEventListener("click", handlePopupClick);
-    clearTimeout(popupContainer.timeoutId);
-    popupContainer.remove();
-  };
+    <div class="w-full flex gap-4">
+      <button type="submit" class="w-full btn-lg btn-orange">Delete</button>
+      <button type="button" class="w-full cancel btn-lg btn-gray">Cancel</button>
+    </div>
+  `;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const password = form.password.value;
+    const validatedData = validate(form, ["password"]);
+    if (!validatedData) return;
 
-    if (!Validation.isPasswordValid(password)) {
-      form.password.focus();
-      renderMessagePopup(
-        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number."
-      );
-      return;
-    }
-
+    const { password } = validatedData;
     const submitBtn = form.querySelector("button[type='submit']");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Processing...";
+    submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white">
+      <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM304 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/>
+    </svg>`;
 
     try {
-      const deleteUserResponse = await AuthService.deleteUser(password);
-      if (!deleteUserResponse.success) {
-        throw new Error(deleteUserResponse.message);
-      }
+      const response = await AuthService.deleteUser(password);
+      if (!response.success) throw new Error(response.message);
+
       setUser(null);
       form.reset();
-      window.location.href = "/login?message=account_deleted";
+      window.location.replace("/login?message=account_deleted");
     } catch (error) {
-      renderMessagePopup(error.message);
+      renderMessagePopup(error.response?.data?.message || error.message);
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Delete";
     }
   };
 
-  const handlePopupClick = (e) => {
-    if (e.target.closest(".cancel") || !e.target.closest(".box")) {
-      removePopup();
-    } else if (e.target.closest(".eye")) {
-      togglePasswordVisibility(e.target.closest(".eye"));
-    }
+  const removePopup = () => {
+    clearTimeout(popupContainer.timeoutId);
+    form.removeEventListener("submit", handleSubmit);
+    form.removeEventListener("click", handlePopupClick);
+    popupContainer.remove();
   };
 
-  const existingPopup = document.querySelector(".popup-container");
-  if (existingPopup) {
-    existingPopup
-      .querySelector("form")
-      .removeEventListener("submit", handleSubmit);
-    existingPopup.removeEventListener("click", handlePopupClick);
-    clearTimeout(existingPopup.timeoutId);
-    existingPopup.remove();
-  }
+  const handlePopupClick = (e) => {
+    if (e.target.closest(".cancel")) {
+      removePopup();
+    } else if (e.target.closest(".eye")) {
+      handlePasswordToggleEye(e.target.closest(".eye"));
+    }
+  };
 
   document.body.appendChild(popupContainer);
   popupContainer.appendChild(form);
   form.addEventListener("submit", handleSubmit);
-  popupContainer.addEventListener("click", handlePopupClick);
+  form.addEventListener("click", handlePopupClick);
   popupContainer.timeoutId = setTimeout(removePopup, 60000);
 };
 
-export const handleAddEditTodo = (todo) => {
+export const handleAddEditTodo = (todo = null) => {
+  let existingPopup = document.querySelector(".popup-container");
+  if (existingPopup) {
+    clearTimeout(existingPopup.timeoutId);
+    existingPopup.querySelector(".cancel").remove();
+    existingPopup.querySelector("form").remove();
+    existingPopup.remove();
+  }
+
   const popupContainer = document.createElement("div");
   popupContainer.classList.add("popup-container");
 
   const form = document.createElement("form");
-  form.classList.add("box");
+  form.classList.add("box", "max-w-screen-sm");
 
   form.innerHTML = `
-  <h2 class="main-heading">${todo ? "Edit Task" : "Add New Task"}</h2>
-  <div class="w-full relative flex flex-col gap-1 items-start">
-    <label for="todoTitle" class="label">Title <span class="text-orange">*</span></label>
-    <input id="todoTitle" name="todoTitle" type="text" placeholder="Enter title" class="input" value="${
-      todo?.title || ""
-    }" required />
-  </div>
-  <div class="w-full relative flex flex-col gap-1 items-start">
-    <label for="todoDescription" class="label">Description</label>
-    <textarea id="todoDescription" name="todoDescription" placeholder="Enter description" class="input h-full min-h-20" rows="2" maxlength="1000">${
-      todo?.description || ""
+    <h2 class="main-heading md:pb-2 pb-1">${
+      todo ? "Edit Todo" : "Add New Todo"
+    }</h2>
+    <textarea id="text" name="text" placeholder="Enter todo" class="textarea resize-none" rows="5" maxlength="300">${
+      todo?.text || ""
     }</textarea>
-  </div>
-  <div class="w-full relative flex flex-col gap-1 items-start">
-    <label for="todoDueDate" class="label">Due Date and Time <span class="text-orange">*</span></label>
-    <input id="todoDueDate" name="todoDueDate" type="datetime-local" class="input uppercase" value="${
+    <input id="dueTime" name="dueTime" type="datetime-local" class="input uppercase" value="${
       todo?.dueTime || ""
     }" required />
-  </div>
-  <div class="w-full flex gap-4">
-    <button type="submit" class="w-full orange-btn-2">${
-      todo ? "Update" : "Add"
-    }</button>
-    <button type="button" class="w-full cancel-btn gray-btn-2">Cancel</button>
-  </div>
-`;
+    <div class="w-full flex gap-4">
+      <button type="submit" class="w-1/2 btn-lg btn-orange">${
+        todo ? "Update" : "Add"
+      }</button>
+      <button type="button" class="cancel w-1/2 btn-lg btn-gray">Cancel</button>
+    </div>
+  `;
 
+  const cancelButton = form.querySelector(".cancel");
   const removePopup = () => {
-    form.removeEventListener("submit", handleFormSubmit);
-    popupContainer.removeEventListener("click", handlePopupClose);
     clearTimeout(popupContainer.timeoutId);
+    form.removeEventListener("submit", handleFormSubmit);
+    cancelButton.removeEventListener("click", removePopup);
     popupContainer.remove();
-  };
-
-  const handlePopupClose = (e) => {
-    if (e.target.closest(".cancel-btn") || !e.target.closest(".box"))
-      removePopup();
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const title = form.todoTitle.value;
-    const description = form.todoDescription.value;
-    const dueTime = form.todoDueDate.value;
+    const validatedData = validate(form, ["text", "dueTime"]);
+    if (!validatedData) return;
 
-    if (!Validation.isTitleValid(title)) {
-      form.title.focus();
-      renderMessagePopup("Title must be less than 100 characters.");
-      return;
-    }
-
-    if (!Validation.isDescriptionValid(description)) {
-      form.description.focus();
-      renderMessagePopup("Description must be less than 200 characters.");
-      return;
-    }
-
-    if (!Validation.isDueTimeValid(dueTime)) {
-      form.dueDate.focus();
-      renderMessagePopup(
-        "Invalid due date and time format (YYYY-MM-DDTHH:MM)."
-      );
-      return;
-    }
+    const { text, dueTime } = validatedData;
 
     const submitBtn = form.querySelector("button[type='submit']");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Processing...";
+    submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white">
+      <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM304 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/>
+    </svg>`;
 
     try {
+      if (
+        todo &&
+        todo.text === text &&
+        new Date(todo.dueTime).getTime() === new Date(dueTime).getTime()
+      ) {
+        throw new Error("No changes detected");
+      }
+
       const response = await (todo
-        ? TodoService.updateTodo(todo._id, title, description, dueTime)
-        : TodoService.addTodo(title, description, dueTime));
+        ? TodoService.updateTodo(todo._id, text, dueTime)
+        : TodoService.addTodo(text, dueTime));
+
       if (!response.success) throw new Error(response.message);
+
       addOrUpdateTodo(response.data);
       renderTodos(todos);
+      renderMessagePopup(response.message);
       removePopup();
     } catch (error) {
-      renderMessagePopup(error.message);
+      renderMessagePopup(
+        error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred"
+      );
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = todo ? "Update" : "Add";
     }
   };
 
-  const existingPopup = document.querySelector(".popup-container");
-  if (existingPopup) {
-    existingPopup
-      .querySelector("form")
-      .removeEventListener("submit", handleFormSubmit);
-    existingPopup.removeEventListener("click", handlePopupClose);
-    clearTimeout(existingPopup.timeoutId);
-    existingPopup.remove();
-  }
-
   document.body.appendChild(popupContainer);
   popupContainer.appendChild(form);
   form.addEventListener("submit", handleFormSubmit);
-  popupContainer.addEventListener("click", handlePopupClose);
+  cancelButton.addEventListener("click", removePopup);
   popupContainer.timeoutId = setTimeout(removePopup, 60000);
 };
 
@@ -345,40 +288,67 @@ export const handleToggleTodoStatus = async (todoId, status, targetBtn) => {
   try {
     const response = await TodoService.toggleTodoStatus(todoId, status);
     if (!response.success) throw new Error(response.message);
+
     addOrUpdateTodo(response.data);
     status = response.data.status;
     renderTodos(todos);
   } catch (error) {
-    renderMessagePopup(error.message);
+    renderMessagePopup(error.response?.data?.message || error.message);
+  } finally {
+    targetBtn.disabled = false;
     targetBtn.innerHTML = status
       ? `<svg viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>`
       : `<svg viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>`;
-  } finally {
-    targetBtn.disabled = false;
   }
 };
 
-export const setupTodoEventListeners = () => {
-  const todosContainer = document.querySelector("#todos");
+export const handleDeleteTodo = async (todoId) => {
+  try {
+    const response = await TodoService.deleteTodo(todoId);
+    if (!response.success) throw new Error(response.message);
 
-  const handleTodoClick = async (e) => {
-    const target = e.target.closest(".todo");
-    if (!target) return;
+    deleteTodo(todoId);
+    renderTodos(todos);
+    renderMessagePopup(response.message);
+  } catch (error) {
+    renderMessagePopup(error.response?.data?.message || error.message);
+  }
+};
 
-    const todoId = target.id.split("-")[1];
-    const todo = getTodo(todoId);
-    if (e.target.closest(".status")) {
-      const targetBtn = e.target.closest(".status");
-      await handleToggleTodoStatus(todoId, !todo.status, targetBtn);
-    } else if (e.target.closest(".edit")) {
-      handleAddEditTodo(todo);
-    } else if (e.target.closest(".delete")) {
-      renderUserConfirmation("Do you want to delete this todo?", () =>
-        handleDeleteTodo(todoId)
-      );
-    }
-  };
+export const handleTodosInitialization = async () => {
+  try {
+    const response = await TodoService.fetchTodos();
+    setTodos(response.data);
+    renderTodos(todos);
 
-  todosContainer.removeEventListener("click", handleTodoClick);
-  todosContainer.addEventListener("click", handleTodoClick);
+    document.querySelector("#todos")?.addEventListener("click", async (e) => {
+      const target = e.target.closest(".todo");
+      if (!target) return;
+
+      const todoId = target.id.split("-")[1];
+      const todo = getTodo(todoId);
+
+      if (e.target.closest(".status")) {
+        await handleToggleTodoStatus(
+          todoId,
+          !todo.status,
+          e.target.closest(".status")
+        );
+      } else if (e.target.closest(".edit")) {
+        handleAddEditTodo(todo);
+      } else if (e.target.closest(".delete")) {
+        renderUserConfirmation("Do you want to delete this todo?", () =>
+          handleDeleteTodo(todoId)
+        );
+      } else if (e.target.closest(".read-more")) {
+        const description = target.querySelector("p");
+        description.innerHTML = todo.description;
+        e.target.textContent =
+          e.target.textContent === "read more" ? "read less" : "read more";
+      }
+    });
+  } catch (error) {
+    renderMessagePopup(error.response?.data?.message || error.message);
+    console.error(error);
+  }
 };

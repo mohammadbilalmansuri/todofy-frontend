@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   root: "src",
+  envDir: __dirname,
   build: {
     rollupOptions: {
       input: {
@@ -13,7 +14,7 @@ export default defineConfig({
         dashboard: resolve(__dirname, "src/dashboard.html"),
       },
     },
-    outDir: "../dist",
+    outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
   },
   plugins: [tailwindcss()],

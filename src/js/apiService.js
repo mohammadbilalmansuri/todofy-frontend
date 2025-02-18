@@ -1,100 +1,84 @@
 import axios from "axios";
+import { renderMessagePopup } from "./render";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api/v1",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
+  timeout: 10000,
 });
 
-// Track token refresh state
 let isRefreshing = false;
 let refreshSubscribers = [];
+
+const subscribeTokenRefresh = (callback) => refreshSubscribers.push(callback);
+
+const onTokenRefreshed = () => {
+  refreshSubscribers.forEach((callback) => callback());
+  refreshSubscribers = [];
+};
+
+const handleLogout = () => {
+  localStorage.removeItem("user");
+  window.location.replace("/login?message=login_again");
+};
 
 // Response Interceptor
 apiClient.interceptors.response.use(
   (response) => response.data,
   async (error) => {
-    if (error.response?.status === 401) {
-      return handle401AndRetry(error);
+    if (!error.response) {
+      renderMessagePopup("Network error. Please check your connection.");
+      return Promise.reject(error);
     }
-    return Promise.reject(processError(error));
+
+    const { status, config, data } = error.response;
+
+    if (status === 401) {
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          await apiClient.post("/users/refresh-access-token");
+          isRefreshing = false;
+          onTokenRefreshed();
+        } catch (refreshError) {
+          isRefreshing = false;
+          refreshSubscribers = [];
+          handleLogout();
+          return Promise.reject(refreshError);
+        }
+      }
+
+      return new Promise((resolve, reject) => {
+        subscribeTokenRefresh(() => {
+          apiClient.request(config).then(resolve).catch(reject);
+        });
+      });
+    }
+
+    renderMessagePopup(data?.message || "An unexpected error occurred.");
+    return Promise.reject(error);
   }
 );
 
-async function handle401AndRetry(error) {
-  if (!isRefreshing) {
-    isRefreshing = true;
-    try {
-      await refreshAccessToken();
-      isRefreshing = false;
-      notifySubscribers();
-    } catch (refreshError) {
-      isRefreshing = false;
-      clearSession();
-      return Promise.reject(refreshError);
-    }
-  }
-
-  return new Promise((resolve, reject) => {
-    refreshSubscribers.push(() => {
-      apiClient(error.config).then(resolve).catch(reject);
-    });
-  });
-}
-
-async function refreshAccessToken() {
-  try {
-    await apiClient.patch("/users/refresh-access-token");
-  } catch (error) {
-    throw new Error("Session expired. Please log in again.");
-  }
-}
-
-function notifySubscribers() {
-  refreshSubscribers.forEach((callback) => callback());
-  refreshSubscribers = [];
-}
-
-function clearSession() {
-  localStorage.removeItem("user");
-  window.location.href = "/login";
-}
-
-function processError(error) {
-  if (error.response) {
-    return new Error(error.response.data?.message || "Something went wrong");
-  } else if (error.request) {
-    return new Error("Network error. Please check your connection.");
-  } else {
-    return new Error(error.message);
-  }
-}
-
-// ======= Todo Services =======
+// API Services
 
 export const TodoService = {
   fetchTodos: () => apiClient.get("/todos"),
-  addTodo: (title, description, dueTime) =>
-    apiClient.post("/todos/add", { title, description, dueTime }),
-  updateTodo: (id, title, description, dueTime) =>
-    apiClient.put(`/todos/update/${id}`, { title, description, dueTime }),
+  addTodo: (text, dueTime) => apiClient.post("/todos/add", { text, dueTime }),
+  updateTodo: (id, text, dueTime) =>
+    apiClient.put(`/todos/update/${id}`, { text, dueTime }),
   toggleTodoStatus: (id, status) =>
     apiClient.patch(`/todos/status/${id}`, { status }),
   deleteTodo: (id) => apiClient.delete(`/todos/delete/${id}`),
 };
-
-// ======= Auth Services =======
 
 export const AuthService = {
   registerUser: (name, email, password) =>
     apiClient.post("/users/register", { name, email, password }),
   loginUser: (email, password) =>
     apiClient.post("/users/login", { email, password }),
-  logoutUser: () =>
-    apiClient.post("/users/logout").finally(() => {
-      localStorage.removeItem("user");
-      window.location.href = "/login";
-    }),
+  logoutUser: () => apiClient.post("/users/logout"),
   deleteUser: (password) =>
     apiClient.delete("/users/delete", { data: { password } }),
 };
