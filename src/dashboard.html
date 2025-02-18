@@ -23,19 +23,15 @@
       <div class="w-full relative flex flex-col items-center">
         <header class="w-full relative flex flex-col items-center">
           <div
-            class="w-full max-w-screen-lg relative p-4 flex justify-between items-center gap-3"
+            class="w-full max-w-screen-lg relative p-4 flex justify-between items-center"
           >
             <a href="/" class="logo">todofy</a>
             <div class="flex items-center gap-3">
               <button class="theme-btn icon-lg"></button>
-              <button class="icon-lg delete-account">
-                <svg viewBox="0 0 640 512">
-                  <path
-                    d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM471 143c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"
-                  />
-                </svg>
+              <button class="delete-account btn-sm btn-gray">
+                Delete Account
               </button>
-              <button class="icon-lg logout">
+              <button class="logout icon-lg">
                 <svg viewBox="0 0 512 512">
                   <path
                     d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
@@ -48,17 +44,20 @@
 
         <main class="w-full relative flex flex-col items-center">
           <div
-            class="w-full max-w-screen-lg relative flex flex-col items-center gap-5 p-4"
+            class="w-full max-w-screen-lg relative flex flex-col items-center gap-4 p-4"
           >
             <div
-              class="w-full relative flex gap-5 items-center justify-between"
+              class="w-full relative flex gap-3 items-center justify-between"
             >
-              <h1 class="main-heading">
-                Hello
-                <span id="user-name" class="text-orange">User</span>, Your Todos
+              <h1
+                class="lg:text-[24px] md:text-[22px] sm:text-[20px] text-[18px] leading-tight font-medium text-gray-600 dark:text-gray-400"
+              >
+                Hello <span id="user-name" class="text-orange">User</span>, Your
+                Todos
               </h1>
-              <button class="icon-lg min-w-fit add-todo">
-                <svg viewBox="0 0 448 512" class="size-4">
+
+              <button class="add-todo icon-lg min-w-fit">
+                <svg viewBox="0 0 448 512">
                   <path
                     d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
                   />
@@ -66,12 +65,18 @@
               </button>
             </div>
 
-            <div id="todos" class="w-full relative grid grid-cols-2 gap-4">
-              <p
-                class="no-todos-message text-xl font-medium animate-pulse text-center"
+            <div
+              id="todos"
+              class="w-full relative grid md:grid-cols-2 grid-cols-1 gap-4"
+            >
+              <svg
+                viewBox="0 0 512 512"
+                class="animate-spin size-6 fill-gray-500 md:col-span-2 col-span-1 mx-auto"
               >
-                Loading...
-              </p>
+                <path
+                  d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"
+                />
+              </svg>
             </div>
           </div>
         </main>

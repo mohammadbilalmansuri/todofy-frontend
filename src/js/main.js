@@ -1,52 +1,40 @@
-import { darkMode, user, setTheme } from "./state.js";
-import {
-  togglePasswordVisibility,
-  handleQueryParamsAndPopups,
-  loadSavedConfig,
-  fetchTodos,
-} from "./utils.js";
+import { darkMode, user, setTheme, initializeTheme } from "./state.js";
+import { handleRedirections, handleQueryMessages } from "./router.js";
 import { renderUserConfirmation } from "./render.js";
 import {
+  handlePasswordToggleEye,
   handleLogin,
   handleRegister,
-  handleAddEditTodo,
   handleLogout,
   handleDeleteUser,
-  setupTodoEventListeners,
+  handleAddEditTodo,
+  handleTodosInitialization,
 } from "./handlers.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
-  handleQueryParamsAndPopups();
-  loadSavedConfig();
+  initializeTheme();
+  handleRedirections();
+  handleQueryMessages();
+
   document
     .querySelector(".theme-btn")
     ?.addEventListener("click", () => setTheme(!darkMode));
 
   if (user) {
-    await fetchTodos();
-    setupTodoEventListeners();
+    await handleTodosInitialization();
 
-    const handleBodyClick = (e) => {
-      if (!e.target.closest(".logout, .delete-account, .add-todo")) return;
-
+    document.body.addEventListener("click", (e) => {
       if (e.target.closest(".logout")) {
-        renderUserConfirmation("Do you want to logout?", () => {
-          handleLogout();
-        });
+        renderUserConfirmation("Do you want to logout?", handleLogout);
       } else if (e.target.closest(".delete-account")) {
         handleDeleteUser();
       } else if (e.target.closest(".add-todo")) {
         handleAddEditTodo();
       }
-    };
-
-    document.body.removeEventListener("click", handleBodyClick);
-    document.body.addEventListener("click", handleBodyClick);
+    });
   } else {
     const eye = document.querySelector(".eye");
-    eye?.addEventListener("click", () => {
-      togglePasswordVisibility(eye);
-    });
+    eye?.addEventListener("click", () => handlePasswordToggleEye(eye));
 
     document
       .getElementById("login-form")
