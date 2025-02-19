@@ -3,6 +3,6 @@
     { "source": "/login", "destination": "/login.html" },
     { "source": "/register", "destination": "/register.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/(.*)", "destination": "/?message=404" }
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
