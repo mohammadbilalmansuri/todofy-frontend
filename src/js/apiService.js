@@ -1,62 +1,50 @@
 import axios from "axios";
-import { renderMessagePopup } from "./render";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
-  timeout: 10000,
 });
 
 let isRefreshing = false;
-let refreshSubscribers = [];
 
-const subscribeTokenRefresh = (callback) => refreshSubscribers.push(callback);
-
-const onTokenRefreshed = () => {
-  refreshSubscribers.forEach((callback) => callback());
-  refreshSubscribers = [];
-};
-
-const handleLogout = () => {
+const removeSession = () => {
   localStorage.removeItem("user");
-  window.location.replace("/login?message=login_again");
+  window.location.replace("/login?message=session_expired");
 };
 
-// Response Interceptor
+const refreshToken = async () => {
+  if (isRefreshing) return;
+  isRefreshing = true;
+  try {
+    const response = await apiClient.patch("/users/refresh-access-token");
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) removeSession();
+    throw error;
+  } finally {
+    isRefreshing = false;
+  }
+};
+
 apiClient.interceptors.response.use(
   (response) => response.data,
   async (error) => {
-    if (!error.response) {
-      renderMessagePopup("Network error. Please check your connection.");
-      return Promise.reject(error);
-    }
+    const originalRequest = error.config;
 
-    const { status, config, data } = error.response;
-
-    if (status === 401) {
-      if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-          await apiClient.post("/users/refresh-access-token");
-          isRefreshing = false;
-          onTokenRefreshed();
-        } catch (refreshError) {
-          isRefreshing = false;
-          refreshSubscribers = [];
-          handleLogout();
-          return Promise.reject(refreshError);
-        }
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        await refreshToken();
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
-
-      return new Promise((resolve, reject) => {
-        subscribeTokenRefresh(() => {
-          apiClient.request(config).then(resolve).catch(reject);
-        });
-      });
     }
 
-    renderMessagePopup(data?.message || "An unexpected error occurred.");
+    console.error(error.response?.data);
     return Promise.reject(error);
   }
 );
@@ -64,21 +52,22 @@ apiClient.interceptors.response.use(
 // API Services
 
 export const TodoService = {
-  fetchTodos: () => apiClient.get("/todos"),
-  addTodo: (text, dueTime) => apiClient.post("/todos/add", { text, dueTime }),
-  updateTodo: (id, text, dueTime) =>
-    apiClient.put(`/todos/update/${id}`, { text, dueTime }),
-  toggleTodoStatus: (id, status) =>
-    apiClient.patch(`/todos/status/${id}`, { status }),
-  deleteTodo: (id) => apiClient.delete(`/todos/delete/${id}`),
+  fetchTodos: async () => await apiClient.get("/todos"),
+  addTodo: async (text, dueTime) =>
+    await apiClient.post("/todos/add", { text, dueTime }),
+  updateTodo: async (id, text, dueTime) =>
+    await apiClient.put(`/todos/update/${id}`, { text, dueTime }),
+  toggleTodoStatus: async (id, status) =>
+    await apiClient.patch(`/todos/status/${id}`, { status }),
+  deleteTodo: async (id) => await apiClient.delete(`/todos/delete/${id}`),
 };
 
 export const AuthService = {
-  registerUser: (name, email, password) =>
-    apiClient.post("/users/register", { name, email, password }),
-  loginUser: (email, password) =>
-    apiClient.post("/users/login", { email, password }),
-  logoutUser: () => apiClient.post("/users/logout"),
-  deleteUser: (password) =>
-    apiClient.delete("/users/delete", { data: { password } }),
+  registerUser: async (name, email, password) =>
+    await apiClient.post("/users/register", { name, email, password }),
+  loginUser: async (email, password) =>
+    await apiClient.post("/users/login", { email, password }),
+  logoutUser: async () => await apiClient.post("/users/logout"),
+  deleteUser: async (password) =>
+    await apiClient.delete("/users/delete", { data: { password } }),
 };
