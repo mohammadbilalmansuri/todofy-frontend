@@ -8,7 +8,9 @@ export const handleRedirections = () => {
   const isLoggedIn = !!storedUser;
 
   if (!allowedRoutes.includes(currentRoute)) {
-    window.location.replace(isLoggedIn ? "/dashboard" : "/");
+    window.location.replace(
+      isLoggedIn ? "/dashboard?message=404" : "/?message=404"
+    );
     return;
   }
 
