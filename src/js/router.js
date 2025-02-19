@@ -17,7 +17,7 @@ export const handleRedirections = () => {
   }
 
   if (isLoggedIn && ["/login", "/register", "/"].includes(currentRoute)) {
-    return window.location.replace("/dashboard?message=logged_in");
+    return window.location.replace("/dashboard");
   }
 
   if (isLoggedIn) setUser(storedUser);
@@ -33,19 +33,18 @@ export const handleQueryMessages = () => {
       "login_required",
       "logged_out",
       "account_deleted",
-      "login_again",
+      "session_expired",
     ],
-    "/dashboard": ["login_success", "account_success", "logged_in"],
+    "/dashboard": ["login_success", "account_success"],
   };
 
   const messages = {
     login_required: "Please login to access the dashboard",
     logged_out: "Logged out successfully",
     account_deleted: "Account deleted successfully",
-    login_again: "Please login again",
     login_success: "Logged in successfully",
     account_success: "Account created successfully",
-    logged_in: "You are already logged in",
+    session_expired: "Session expired. Please login again",
   };
 
   if (routeMessageMap[currentRoute]?.includes(message) && messages[message]) {
