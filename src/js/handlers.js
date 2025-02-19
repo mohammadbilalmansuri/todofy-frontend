@@ -28,7 +28,6 @@ export const handleLogin = async (e) => {
   const form = e.target;
   const validatedData = validate(form, ["email", "password"]);
   if (!validatedData) return;
-
   const { email, password } = validatedData;
 
   const submitBtn = form.querySelector("button[type='submit']");
@@ -37,13 +36,11 @@ export const handleLogin = async (e) => {
 
   try {
     const response = await AuthService.loginUser(email, password);
-    if (!response.success) throw new Error(response.message);
-
     setUser(response.data.user);
-    form.reset();
     window.location.replace("/dashboard?message=login_success");
   } catch (error) {
     renderMessagePopup(error.response?.data?.message || error.message);
+    console.log(1);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Login";
@@ -55,7 +52,6 @@ export const handleRegister = async (e) => {
   const form = e.target;
   const validatedData = validate(form, ["name", "email", "password"]);
   if (!validatedData) return;
-
   const { name, email, password } = validatedData;
 
   const submitBtn = form.querySelector("button[type='submit']");
@@ -63,18 +59,9 @@ export const handleRegister = async (e) => {
   submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>`;
 
   try {
-    const registerResponse = await AuthService.registerUser(
-      name,
-      email,
-      password
-    );
-    if (!registerResponse.success) throw new Error(registerResponse.message);
-
+    await AuthService.registerUser(name, email, password);
     const loginResponse = await AuthService.loginUser(email, password);
-    if (!loginResponse.success) throw new Error(loginResponse.message);
-
     setUser(loginResponse.data.user);
-    form.reset();
     window.location.replace("/dashboard?message=account_success");
   } catch (error) {
     renderMessagePopup(error.response?.data?.message || error.message);
@@ -86,8 +73,7 @@ export const handleRegister = async (e) => {
 
 export const handleLogout = async () => {
   try {
-    const logoutResponse = await AuthService.logoutUser();
-    if (!logoutResponse.success) throw new Error(logoutResponse.message);
+    await AuthService.logoutUser();
     setUser(null);
     window.location.replace("/login?message=logged_out");
   } catch (error) {
@@ -139,8 +125,8 @@ export const handleDeleteUser = () => {
     e.preventDefault();
     const validatedData = validate(form, ["password"]);
     if (!validatedData) return;
-
     const { password } = validatedData;
+
     const submitBtn = form.querySelector("button[type='submit']");
     submitBtn.disabled = true;
     submitBtn.innerHTML = `<svg viewBox="0 0 512 512" class="animate-spin size-4.5 fill-white">
@@ -148,11 +134,8 @@ export const handleDeleteUser = () => {
     </svg>`;
 
     try {
-      const response = await AuthService.deleteUser(password);
-      if (!response.success) throw new Error(response.message);
-
+      await AuthService.deleteUser(password);
       setUser(null);
-      form.reset();
       window.location.replace("/login?message=account_deleted");
     } catch (error) {
       renderMessagePopup(error.response?.data?.message || error.message);
@@ -229,7 +212,6 @@ export const handleAddEditTodo = (todo = null) => {
     e.preventDefault();
     const validatedData = validate(form, ["text", "dueTime"]);
     if (!validatedData) return;
-
     const { text, dueTime } = validatedData;
 
     const submitBtn = form.querySelector("button[type='submit']");
@@ -247,22 +229,16 @@ export const handleAddEditTodo = (todo = null) => {
         throw new Error("No changes detected");
       }
 
-      const response = await (todo
-        ? TodoService.updateTodo(todo._id, text, dueTime)
-        : TodoService.addTodo(text, dueTime));
-
-      if (!response.success) throw new Error(response.message);
+      const response = todo
+        ? await TodoService.updateTodo(todo._id, text, dueTime)
+        : await TodoService.addTodo(text, dueTime);
 
       addOrUpdateTodo(response.data);
       renderTodos(todos);
       renderMessagePopup(response.message);
       removePopup();
     } catch (error) {
-      renderMessagePopup(
-        error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred"
-      );
+      renderMessagePopup(error.response?.data?.message || error.message);
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = todo ? "Update" : "Add";
@@ -287,8 +263,6 @@ export const handleToggleTodoStatus = async (todoId, status, targetBtn) => {
 
   try {
     const response = await TodoService.toggleTodoStatus(todoId, status);
-    if (!response.success) throw new Error(response.message);
-
     addOrUpdateTodo(response.data);
     status = response.data.status;
     renderTodos(todos);
@@ -305,8 +279,6 @@ export const handleToggleTodoStatus = async (todoId, status, targetBtn) => {
 export const handleDeleteTodo = async (todoId) => {
   try {
     const response = await TodoService.deleteTodo(todoId);
-    if (!response.success) throw new Error(response.message);
-
     deleteTodo(todoId);
     renderTodos(todos);
     renderMessagePopup(response.message);
@@ -349,6 +321,5 @@ export const handleTodosInitialization = async () => {
     });
   } catch (error) {
     renderMessagePopup(error.response?.data?.message || error.message);
-    console.error(error);
   }
 };
