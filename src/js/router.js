@@ -8,9 +8,7 @@ export const handleRedirections = () => {
   const isLoggedIn = !!storedUser;
 
   if (!allowedRoutes.includes(currentRoute)) {
-    window.location.replace(
-      isLoggedIn ? "/dashboard?message=404" : "/?message=404"
-    );
+    window.location.replace(isLoggedIn ? "/dashboard" : "/");
     return;
   }
 
@@ -38,7 +36,6 @@ export const handleQueryMessages = () => {
       "session_expired",
     ],
     "/dashboard": ["login_success", "account_success"],
-    "/": ["404"],
   };
 
   const messages = {
@@ -48,7 +45,6 @@ export const handleQueryMessages = () => {
     login_success: "Logged in successfully",
     account_success: "Account created successfully",
     session_expired: "Session expired. Please login again",
-    404: "Page not found",
   };
 
   if (routeMessageMap[currentRoute]?.includes(message) && messages[message]) {
