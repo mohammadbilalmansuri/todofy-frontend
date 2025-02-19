@@ -40,7 +40,6 @@ export const handleLogin = async (e) => {
     window.location.replace("/dashboard?message=login_success");
   } catch (error) {
     renderMessagePopup(error.response?.data?.message || error.message);
-    console.log(1);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Login";
