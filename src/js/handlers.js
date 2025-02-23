@@ -188,7 +188,7 @@ export const handleAddEditTodo = (todo = null) => {
     <textarea id="text" name="text" placeholder="Enter todo" class="textarea resize-none" rows="5" maxlength="300">${
       todo?.text || ""
     }</textarea>
-    <input id="dueTime" name="dueTime" type="datetime-local" class="input uppercase" value="${
+    <input id="dueTime" name="dueTime" type="datetime-local" placeholder="Enter due time" class="input uppercase" value="${
       todo?.dueTime || ""
     }" required />
     <div class="w-full flex gap-4">
