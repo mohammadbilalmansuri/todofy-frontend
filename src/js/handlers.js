@@ -191,7 +191,14 @@ export const handleAddEditTodo = (todo = null) => {
     <div class="w-full relative flex flex-col items-start">
       <label for="dueTime" class="datetime-lable">Due Date & Time</label>
       <input id="dueTime" name="dueTime" type="datetime-local" class="datetime-input" value="${
-        todo?.dueTime || ""
+        todo?.dueTime ||
+        new Date(
+          Date.now() +
+            24 * 60 * 60 * 1000 -
+            new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .slice(0, 16)
       }" required />
     </div>
     <div class="w-full flex gap-4">

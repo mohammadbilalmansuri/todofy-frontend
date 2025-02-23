@@ -137,7 +137,7 @@ select:-webkit-autofill:focus {
 }
 
 .datetime-lable {
-  @apply font-medium absolute md:p-4 p-3;
+  @apply absolute md:p-4 p-3;
 }
 
 /* Container Classes */
