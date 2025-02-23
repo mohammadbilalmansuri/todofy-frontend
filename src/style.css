@@ -37,7 +37,7 @@ body {
 }
 
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  @apply absolute right-4 size-4.5 invert-50;
+  @apply absolute right-4 size-5 invert-50;
 }
 
 ::selection {
@@ -132,8 +132,12 @@ select:-webkit-autofill:focus {
   @apply w-full relative border rounded-md outline-none md:p-4 p-3 bg-transparent text-gray-600 dark:text-gray-400 placeholder:text-gray-500 focus:border-orange border-gray-500;
 }
 
-.label {
-  @apply text-gray-600 dark:text-gray-400 pl-0.5;
+.datetime-input {
+  @apply w-full relative border rounded-md outline-none md:pt-12 pt-10 md:p-4 p-3 bg-transparent text-gray-600 dark:text-gray-400 placeholder:text-gray-500 focus:border-orange border-gray-500 uppercase;
+}
+
+.datetime-lable {
+  @apply font-medium absolute md:p-4 p-3;
 }
 
 /* Container Classes */

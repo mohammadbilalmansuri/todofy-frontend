@@ -188,9 +188,12 @@ export const handleAddEditTodo = (todo = null) => {
     <textarea id="text" name="text" placeholder="Enter todo" class="textarea resize-none" rows="5" maxlength="300">${
       todo?.text || ""
     }</textarea>
-    <input id="dueTime" name="dueTime" type="datetime-local" placeholder="Enter due time" class="input uppercase" value="${
-      todo?.dueTime || ""
-    }" required />
+    <div class="w-full relative flex flex-col items-start">
+      <label for="dueTime" class="datetime-lable">Due Date & Time</label>
+      <input id="dueTime" name="dueTime" type="datetime-local" class="datetime-input" value="${
+        todo?.dueTime || ""
+      }" required />
+    </div>
     <div class="w-full flex gap-4">
       <button type="submit" class="w-1/2 btn-lg btn-orange">${
         todo ? "Update" : "Add"
