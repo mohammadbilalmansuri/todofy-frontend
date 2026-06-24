@@ -195,7 +195,7 @@ export const handleAddEditTodo = (todo = null) => {
         new Date(
           Date.now() +
             24 * 60 * 60 * 1000 -
-            new Date().getTimezoneOffset() * 60000
+            new Date().getTimezoneOffset() * 60000,
         )
           .toISOString()
           .slice(0, 16)
@@ -313,13 +313,13 @@ export const handleTodosInitialization = async () => {
         await handleToggleTodoStatus(
           todoId,
           !todo.status,
-          e.target.closest(".status")
+          e.target.closest(".status"),
         );
       } else if (e.target.closest(".edit")) {
         handleAddEditTodo(todo);
       } else if (e.target.closest(".delete")) {
         renderUserConfirmation("Do you want to delete this todo?", () =>
-          handleDeleteTodo(todoId)
+          handleDeleteTodo(todoId),
         );
       } else if (e.target.closest(".read-more")) {
         const description = target.querySelector("p");

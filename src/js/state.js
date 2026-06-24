@@ -30,7 +30,7 @@ export const initializeTheme = () => {
   setTheme(
     storedDarkMode
       ? storedDarkMode === "true"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches
+      : window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
 };
 

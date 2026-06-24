@@ -54,6 +54,6 @@ export const handleQueryMessages = () => {
   window.history.replaceState(
     null,
     "",
-    window.location.origin + window.location.pathname
+    window.location.origin + window.location.pathname,
   );
 };

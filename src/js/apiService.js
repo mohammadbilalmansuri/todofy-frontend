@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
 
     console.error(error.response?.data);
     return Promise.reject(error);
-  }
+  },
 );
 
 // API Services
